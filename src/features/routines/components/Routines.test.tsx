@@ -1,17 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Notes } from './Notes';
-
-// Mock Zustand store
-jest.mock('@/core/store/useNotesStore', () => ({
-  useNotesStore: () => ({
-    notes: [],
-    addNote: jest.fn(),
-    deleteNote: jest.fn(),
-    updateNote: jest.fn()
-  })
-}));
+import { Routines } from './Routines';
 
 // Mock Framer Motion
 jest.mock('framer-motion', () => ({
@@ -23,42 +13,43 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }) => <>{children}</>
 }));
 
-describe('Notes', () => {
+describe('Routines', () => {
   // Render Testleri
   describe('Rendering', () => {
     it('renders the component with all elements', () => {
-      render(<Notes />);
-      expect(screen.getByText('Notlar')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Yeni not ekle')).toBeInTheDocument();
+      render(<Routines />);
+      expect(screen.getByText('Rutinler')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Yeni rutin ekle')).toBeInTheDocument();
       expect(screen.getByText('Ekle')).toBeInTheDocument();
     });
   });
 
   // Interaktif Testleri
   describe('Interactions', () => {
-    it('allows adding new notes', async () => {
-      render(<Notes />);
-      const input = screen.getByPlaceholderText('Yeni not ekle');
+    it('allows adding new routines', async () => {
+      render(<Routines />);
+      const input = screen.getByPlaceholderText('Yeni rutin ekle');
       const addButton = screen.getByText('Ekle');
 
-      await userEvent.type(input, 'Alışveriş listesi');
+      await userEvent.type(input, 'Spor yapmak');
       await userEvent.click(addButton);
 
-      expect(screen.getByText('Alışveriş listesi')).toBeInTheDocument();
+      expect(screen.getByText('Spor yapmak')).toBeInTheDocument();
     });
 
-    it('allows deleting notes', async () => {
-      render(<Notes />);
-      const input = screen.getByPlaceholderText('Yeni not ekle');
+    it('allows toggling routine completion', async () => {
+      render(<Routines />);
+      const input = screen.getByPlaceholderText('Yeni rutin ekle');
       const addButton = screen.getByText('Ekle');
 
-      await userEvent.type(input, 'Alışveriş listesi');
+      await userEvent.type(input, 'Spor yapmak');
       await userEvent.click(addButton);
 
-      const deleteButton = screen.getByLabelText('Notu sil');
-      await userEvent.click(deleteButton);
+      const routineItem = screen.getByText('Spor yapmak');
+      const checkbox = routineItem.previousSibling;
+      await userEvent.click(checkbox);
 
-      expect(screen.queryByText('Alışveriş listesi')).not.toBeInTheDocument();
+      expect(routineItem).toHaveClass('line-through');
     });
   });
 
@@ -66,14 +57,14 @@ describe('Notes', () => {
   describe('Responsive Behavior', () => {
     it('renders correctly on mobile', () => {
       window.innerWidth = 375;
-      render(<Notes />);
-      expect(screen.getByText('Notlar')).toBeInTheDocument();
+      render(<Routines />);
+      expect(screen.getByText('Rutinler')).toBeInTheDocument();
     });
 
     it('renders correctly on desktop', () => {
       window.innerWidth = 1280;
-      render(<Notes />);
-      expect(screen.getByText('Notlar')).toBeInTheDocument();
+      render(<Routines />);
+      expect(screen.getByText('Rutinler')).toBeInTheDocument();
     });
   });
 
@@ -81,15 +72,15 @@ describe('Notes', () => {
   describe('Theme Support', () => {
     it('renders correctly in dark mode', () => {
       document.documentElement.classList.add('dark');
-      render(<Notes />);
-      expect(screen.getByText('Notlar')).toBeInTheDocument();
+      render(<Routines />);
+      expect(screen.getByText('Rutinler')).toBeInTheDocument();
       document.documentElement.classList.remove('dark');
     });
 
     it('renders correctly in light mode', () => {
       document.documentElement.classList.add('light');
-      render(<Notes />);
-      expect(screen.getByText('Notlar')).toBeInTheDocument();
+      render(<Routines />);
+      expect(screen.getByText('Rutinler')).toBeInTheDocument();
       document.documentElement.classList.remove('light');
     });
   });

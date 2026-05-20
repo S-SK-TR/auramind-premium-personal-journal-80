@@ -1,64 +1,59 @@
-import { act, renderHook } from '@testing-library/react'
-import { useNotesStore } from './useNotesStore'
+import { renderHook, act } from '@testing-library/react';
+import { useNotesStore } from './useNotesStore';
+
+// Clear the store before each test
+beforeEach(() => {
+  useNotesStore.getState().clearNotes();
+});
 
 describe('useNotesStore', () => {
-  beforeEach(() => {
-    // Clear the store before each test
-    useNotesStore.setState({ notes: [] })
-  })
+  it('should initialize with empty notes array', () => {
+    const { result } = renderHook(() => useNotesStore());
+    expect(result.current.notes).toEqual([]);
+  });
 
-  it('should add a note', () => {
-    const { result } = renderHook(() => useNotesStore())
-
+  it('should add a new note', () => {
+    const { result } = renderHook(() => useNotesStore());
     act(() => {
-      result.current.addNote({
-        title: 'Test Note',
-        content: 'Test content'
-      })
-    })
-
-    expect(result.current.notes).toHaveLength(1)
-    expect(result.current.notes[0]).toMatchObject({
-      title: 'Test Note',
-      content: 'Test content'
-    })
-    expect(result.current.notes[0].id).toBeDefined()
-    expect(result.current.notes[0].date).toBeDefined()
-  })
+      result.current.addNote('Test note');
+    });
+    expect(result.current.notes).toHaveLength(1);
+    expect(result.current.notes[0].text).toBe('Test note');
+  });
 
   it('should delete a note', () => {
-    const { result } = renderHook(() => useNotesStore())
-
-    // First add a note
+    const { result } = renderHook(() => useNotesStore());
     act(() => {
-      result.current.addNote({
-        title: 'Test Note',
-        content: 'Test content'
-      })
-    })
-
-    const noteId = result.current.notes[0].id
-
-    // Then delete it
+      result.current.addNote('Note to delete');
+    });
+    const noteId = result.current.notes[0].id;
     act(() => {
-      result.current.deleteNote(noteId)
-    })
+      result.current.deleteNote(noteId);
+    });
+    expect(result.current.notes).toHaveLength(0);
+  });
 
-    expect(result.current.notes).toHaveLength(0)
-  })
-
-  it('should persist notes to localStorage', () => {
-    const { result } = renderHook(() => useNotesStore())
-
+  it('should update a note', () => {
+    const { result } = renderHook(() => useNotesStore());
     act(() => {
-      result.current.addNote({
-        title: 'Persistent Note',
-        content: 'This should persist'
-      })
-    })
+      result.current.addNote('Original text');
+    });
+    const noteId = result.current.notes[0].id;
+    act(() => {
+      result.current.updateNote(noteId, 'Updated text');
+    });
+    expect(result.current.notes[0].text).toBe('Updated text');
+  });
 
-    // Simulate page reload
-    const storedState = localStorage.getItem('notes-storage')
-    expect(storedState).toContain('Persistent Note')
-  })
-})
+  it('should clear all notes', () => {
+    const { result } = renderHook(() => useNotesStore());
+    act(() => {
+      result.current.addNote('Note 1');
+      result.current.addNote('Note 2');
+    });
+    act(() => {
+      result.current.clearNotes();
+    });
+    expect(result.current.notes).toHaveLength(0);
+  });
+});

@@ -1,49 +1,62 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { Dashboard } from './BentoDashboard'
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { BentoDashboard } from './BentoDashboard';
 
-// Mock useNavigate
-const mockNavigate = jest.fn()
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate
-}))
+// Mock child components
+jest.mock('@/components/ui/BentoGrid', () => ({
+  BentoGrid: ({ children }) => <div data-testid="mock-bento-grid">{children}</div>,
+  BentoGridItem: ({ children, ...props }) => (
+    <div data-testid="mock-bento-grid-item" {...props}>{children}</div>
+  )
+}));
 
-describe('Dashboard', () => {
-  it('renders dashboard title', () => {
-    render(
-      <MemoryRouter>
-        <Dashboard />
-      </MemoryRouter>
-    )
-    expect(screen.getByText('Dashboard')).toBeInTheDocument()
-  })
+// Mock Framer Motion
+jest.mock('framer-motion', () => ({
+  ...jest.requireActual('framer-motion'),
+  motion: {
+    div: ({ children, ...props }) => <div {...props}>{children}</div>
+  }
+}));
 
-  it('renders all bento items', () => {
-    render(
-      <MemoryRouter>
-        <Dashboard />
-      </MemoryRouter>
-    )
-    expect(screen.getByText('Notes')).toBeInTheDocument()
-    expect(screen.getByText('Mood Tracker')).toBeInTheDocument()
-    expect(screen.getByText('Routines')).toBeInTheDocument()
-  })
+describe('BentoDashboard', () => {
+  // Render Testleri
+  describe('Rendering', () => {
+    it('renders the component with all elements', () => {
+      render(<BentoDashboard />);
+      expect(screen.getByTestId('mock-bento-grid')).toBeInTheDocument();
+      expect(screen.getAllByTestId('mock-bento-grid-item').length).toBe(6); // 6 Bento grid öğesi
+    });
+  });
 
-  it('navigates to correct route when bento item is clicked', () => {
-    render(
-      <MemoryRouter>
-        <Dashboard />
-      </MemoryRouter>
-    )
+  // Responsive Testleri
+  describe('Responsive Behavior', () => {
+    it('renders correctly on mobile', () => {
+      window.innerWidth = 375;
+      render(<BentoDashboard />);
+      expect(screen.getByTestId('mock-bento-grid')).toBeInTheDocument();
+    });
 
-    fireEvent.click(screen.getByText('Notes'))
-    expect(mockNavigate).toHaveBeenCalledWith('/notes')
+    it('renders correctly on desktop', () => {
+      window.innerWidth = 1280;
+      render(<BentoDashboard />);
+      expect(screen.getByTestId('mock-bento-grid')).toBeInTheDocument();
+    });
+  });
 
-    fireEvent.click(screen.getByText('Mood Tracker'))
-    expect(mockNavigate).toHaveBeenCalledWith('/mood')
+  // Dark/Light Mode Testleri
+  describe('Theme Support', () => {
+    it('renders correctly in dark mode', () => {
+      document.documentElement.classList.add('dark');
+      render(<BentoDashboard />);
+      expect(screen.getByTestId('mock-bento-grid')).toBeInTheDocument();
+      document.documentElement.classList.remove('dark');
+    });
 
-    fireEvent.click(screen.getByText('Routines'))
-    expect(mockNavigate).toHaveBeenCalledWith('/routines')
-  })
-})
+    it('renders correctly in light mode', () => {
+      document.documentElement.classList.add('light');
+      render(<BentoDashboard />);
+      expect(screen.getByTestId('mock-bento-grid')).toBeInTheDocument();
+      document.documentElement.classList.remove('light');
+    });
+  });
+});

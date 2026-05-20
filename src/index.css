@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,9 +13,7 @@
   --glass-glow: rgba(59, 130, 246, 0.1);
   --text-primary: #f8fafc;
   --text-muted: #94a3b8;
-  --brand-50: 217 91% 90%;
   --brand-500: 217 91% 60%;
-  --brand-600: 217 91% 50%;
 }
 
 /* ── Light Mode Tokens ── */
@@ -27,9 +26,7 @@
   --glass-glow: rgba(59, 130, 246, 0.08);
   --text-primary: #0f172a;
   --text-muted: #64748b;
-  --brand-50: 217 91% 90%;
   --brand-500: 217 91% 60%;
-  --brand-600: 217 91% 50%;
 }
 
 body {
