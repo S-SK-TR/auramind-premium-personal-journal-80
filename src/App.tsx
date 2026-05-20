@@ -9,7 +9,6 @@ import { Routines } from '@/features/routines/components/Routines'
 function App() {
   const location = useLocation()
 
-export default function App() {
   return (
     <AppShell>
       <AnimatePresence mode="wait">
@@ -23,7 +22,7 @@ export default function App() {
         </Routes>
       </AnimatePresence>
     </AppShell>
-  ) );
+  ) 
 }
 
 export default App
