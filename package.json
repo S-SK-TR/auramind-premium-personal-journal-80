@@ -1,5 +1,5 @@
 {
-  "name": "mydailynotes---elit-ki\u015fisel-g\u00fcnl\u00fck-ve-ak\u0131ll\u0131-not-defteri",
+  "name": "mydailynotes---elit-kişisel-günlük-ve-akıllı-not-defteri",
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
@@ -9,7 +9,8 @@
     "react-router-dom": "^6.20.0",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.1",
-    "lucide-react": "^0.344.0"
+    "lucide-react": "^0.344.0",
+    "zustand": "^4.4.0"
   },
   "devDependencies": {
     "vite": "^5.0.0",
