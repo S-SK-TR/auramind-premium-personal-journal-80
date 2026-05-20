@@ -2,11 +2,11 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
-interface NotesProps {
+interface NewPageProps {
   className?: string;
 }
 
-export function Notes({ className }: NotesProps) {
+export function NewPage({ className }: NewPageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,8 +17,8 @@ export function Notes({ className }: NotesProps) {
         className
       )}
     >
-      <h1 className="text-3xl font-bold text-[var(--text-primary)] font-[Outfit]">Notes</h1>
-      <p className="text-[var(--text-muted)]">Your premium notes dashboard with glassmorphism UI.</p>
+      <h1 className="text-3xl font-bold text-[var(--text-primary)] font-[Outfit]">New Page</h1>
+      <p className="text-[var(--text-muted)]">This is a new page with premium UI elements.</p>
     </motion.div>
   );
 }
